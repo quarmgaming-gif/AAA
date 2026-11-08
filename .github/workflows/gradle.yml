@@ -3,10 +3,13 @@ name: CarbClient Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -22,13 +25,15 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Grant execute permission
-        run: chmod +x gradlew
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
 
-      - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+      - name: Build CarbClient
+        run: gradle build --no-daemon
 
-      - name: Upload build files
+      - name: Upload CarbClient JAR
         uses: actions/upload-artifact@v4
         with:
           name: CarbClient-1.21.4
